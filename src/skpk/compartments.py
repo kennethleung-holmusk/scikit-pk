@@ -26,10 +26,6 @@ OtherError
 #     Compartment Class
 # =========================
 
-def test_print():
-    print('This works')
-
-
 class Cmt:
     '''
     Compartment class
@@ -49,30 +45,17 @@ class Cmt:
         print(f'Compartment {cmt_name} has been generated')
 
 
-    def set_attr(self, cmt_name, Vd):
+    def set_attr(self, new_Vd):
         '''
-        docstring
+        Modify the attributes of an existing compartment instance
         '''
-        self.cmt_name = cmt_name
-        self.Vd = Vd
-        self.cmt_attr = (cmt_name, Vd)
+        self.Vd = new_Vd
+        self.cmt_attr = (self.cmt_name, new_Vd)
 
 
     def get_attr(self):
         '''
-        docstring
+        Return the attributes of an existing compartment instance
         '''
         print(f"Name of Compartment: {self.cmt_name}")
-        print(f"Vol of Distribution (Vd): {self.Vd}L")
-
-    # def save_cmt(objects, filename):
-    #     pickle = __import__('pickle')
-    #     with open(filename, 'wb') as output:  # Overwrites any existing file.
-    #         pickle.dump(objects, output, -1)
-
-
-
-
-# def load_cmt(filename):
-#     pickle = __import__('pickle')
-#     pickle.load(open(filename, "rb", -1))
+        print(f"Volume of Distribution (Vd): {self.Vd}L")

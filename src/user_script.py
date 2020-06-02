@@ -1,6 +1,6 @@
-# ===================================
-#       Front-End User Script
-# ===================================
+# ****************************************
+#          Front-End User Script
+# ****************************************
 
 # Import necessary libraries
 import os
@@ -8,15 +8,14 @@ os.chdir(r'/home/klty0988/Desktop/scikit-pk/src')
 
 # Main script for testing classes and functions
 import skpk
-import pickle
 
 
 # Testing functions from mainFunctions.py
 skpk.main.test_print(2,3)
 
-# ===================================
-#     Testing Compartment Class
-# ===================================
+# ===========================================
+#    Generating Compartment (CMT) Instances
+# ===========================================
 
 C1 = skpk.Cmt('Absorption', 23)
 
@@ -32,29 +31,35 @@ C2.cmt_attr
 
 C2.get_attr()
 
-# Saving compartments
+# ===========================
+#     Saving compartments 
+# ===========================
 
 # C2.save_cmt('test_save_C2.pkl') - Use main function to save instead
 
 skpk.main.save_cmt(C1, C2, C3)
 
-skpk.main.list_saved_cmt()
-
-
-# C1, C2, C3 = pickle.load(open('test_save_C2.pkl', "rb", -1))
-
-
-D1 = skpk.main.load_cmt('Absorptdion')
+skpk.main.list_cmt()
 
 
 
+# ===========================
+#     Loading compartments 
+# ===========================
 
+D1 = skpk.main.load_cmt('Absorption')
 
+D2 = skpk.main.load_cmt('First-Pass', folder_path = './wrongpath')
 
+E1, E2 = skpk.main.load_cmt('Absorption', 'First-Pass')
+
+D1.get_attr()
+
+A1, A2, A3 = skpk.main.load_all_cmt()
 
 # Testing Zone
 
-skpk.main.load_cmt()
+del A1
 
 # ===================================
 #         Testing Model Class
