@@ -65,10 +65,10 @@ class Cmt:
         print(f"Name of Compartment: {self.cmt_name}")
         print(f"Vol of Distribution (Vd): {self.Vd}L")
 
-    def save_cmt(objects, filename):
-        pickle = __import__('pickle')
-        with open(filename, 'wb') as output:  # Overwrites any existing file.
-            pickle.dump(objects, output, pickle.HIGHEST_PROTOCOL)
+    # def save_cmt(objects, filename):
+    #     pickle = __import__('pickle')
+    #     with open(filename, 'wb') as output:  # Overwrites any existing file.
+    #         pickle.dump(objects, output, -1)
 
 
 
