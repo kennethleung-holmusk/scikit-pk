@@ -3,10 +3,6 @@ import os
 import pickle
 
 # Fold all functions: Ctrl + Alt + Shift + [
-def test_print(x,y):
-    number = x * y
-    print(f'{x} * {y} = {number}')
-
 
 # ========================
 #  Compartment Functions
@@ -36,20 +32,20 @@ def save_cmt(*args, folder_path = './skpk_saved_cmts'):
 
 def __check_path_exist(folder_path):
     if not os.path.exists(folder_path):
-        raise Exception(f'Folder path {folder_path} does not exist')
+        raise Exception(f'Folder path {folder_path} does not exist.')
     else:
         os.chdir(folder_path)  # Change directory if folder exists
 
 
 
-def list_cmt(folder_path = './skpk_saved_cmts'):
+def list_cmt(folder_path):
     '''
     Lists the saved compartmente instances (pickle files) inside the specified folder path
     '''
     __check_path_exist(folder_path) # Check if folder path exists
-    n_count = 1 # Counter for number of compartments in the folder
 
     print('\n=== List of saved instances ===')
+    n_count = 1 # Counter for number of compartments in the folder
     for file in os.listdir('.'): # List pkl files in current directory
         if file.endswith('.pkl'):
             print(n_count, str(' - '),file)
@@ -63,14 +59,16 @@ def load_cmt(*filenames, folder_path = './skpk_saved_cmts'):
     Load saved compartment instance(s) from an existing folder path or library
     '''
     __check_path_exist(folder_path) # Check if folder path exists
-
     list_of_cmts = [] # Create empty list to store cmt objects
 
     for filename in filenames:
         pickle_filename = filename + '.pkl' # Convert to pickle file string
         if not os.path.exists(pickle_filename): # Check if filename exists
-            raise Exception(f'{pickle_filename} does not exist')
-            os.chdir(os.path.dirname(os.getcwd()))  # Return console to parent directory
+            existing_cmts = [file for file in os.listdir('.') if file.endswith('.pkl')]
+            os.chdir(os.path.dirname(os.getcwd())) # Return console to parent directory
+            raise Exception(f"""{pickle_filename} does not exist.
+            List of existing compartment instances:
+            {existing_cmts}""")
         else:
             cmt_object = pickle.load(open(pickle_filename, "rb", -1)) # Load pickle
             print(f'Compartment {pickle_filename} loaded')
@@ -91,7 +89,6 @@ def load_all_cmt(folder_path = './skpk_saved_cmts'):
     Load all saved compartment instances (pickle files) in specified folder path
     '''
     __check_path_exist(folder_path) # Check if folder path exists
-
     list_of_cmts = [] # Create empty list to store cmt objects
 
     for file in os.listdir('.'):
@@ -101,7 +98,6 @@ def load_all_cmt(folder_path = './skpk_saved_cmts'):
             list_of_cmts.append(cmt_object)
 
     os.chdir(os.path.dirname(os.getcwd())) # Return console to parent directory
-
     if len(list_of_cmts) == 0:
         print('No pickle files found in folder')
     else:

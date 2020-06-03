@@ -23,13 +23,15 @@ class Cmt:
             Description of returned object.
         """
         if cmt_id in self.list_cmt_ids:
-            raise Exception(f'Compartment ID {cmt_id} already exists')
+            raise Exception(f"""Compartment ID {cmt_id} already exists.
+            List of existing compartment IDs:
+            {self.list_cmt_ids}""")
 
     def __check_cmt_name_exist(self, cmt_name):
         if cmt_name in self.list_cmt_names:
-            raise Exception(f"""
-            Compartment name {cmt_name} already exists. Please select another name
-            """)
+            raise Exception(f"""Compartment name {cmt_name} already exists.
+            List of existing compartment names:
+            {self.list_cmt_names}""")
 
     def __check_cmt_name_dtype(self, cmt_name):
         if isinstance(cmt_name, (str, type(None))) == False:
@@ -92,7 +94,7 @@ class Cmt:
         self.list_cmt_names.append(self.cmt_name) # Collate compartment names in list
 
         self.cmt_attr = (self.cmt_id, self.cmt_name, self.Vd) # Tuple of attributes
-        print(f'Compartment {cmt_name} has been generated')
+        print(f'Compartment {cmt_name} successfully generated')
 
 
     def set_attr(self, new_cmt_id = None, new_cmt_name = None, new_Vd = None):
