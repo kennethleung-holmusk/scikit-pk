@@ -12,7 +12,7 @@ def test_print(x,y):
 #  Compartment Functions
 # ========================
 
-def save_cmt(*args, folder_path = './skpk_saved'):
+def save_cmt(*args, folder_path = './skpk_saved_files'):
     '''
     Saves the compartment instances as pickle files inside folder
     '''
@@ -30,7 +30,6 @@ def save_cmt(*args, folder_path = './skpk_saved'):
         pickle_filename = f'{arg.cmt_name}' + '.pkl'
         with open(pickle_filename, 'wb') as output:  # Overwrites any existing file.
             pickle.dump(arg, output, -1)
-
     os.chdir(os.path.dirname(os.getcwd())) # Return console to parent directory
 
 
@@ -43,7 +42,7 @@ def __check_path_exist(folder_path):
 
 
 
-def list_cmt(folder_path = './skpk_saved'):
+def list_cmt(folder_path = './skpk_saved_files'):
     '''
     Lists the saved compartmente instances (pickle files) inside the specified folder path
     '''
@@ -55,12 +54,11 @@ def list_cmt(folder_path = './skpk_saved'):
         if file.endswith('.pkl'):
             print(n_count, str(' - '),file)
             n_count +=1
-
     os.chdir(os.path.dirname(os.getcwd())) # Return console to parent directory
 
 
 
-def load_cmt(*filenames, folder_path = './skpk_saved'):
+def load_cmt(*filenames, folder_path = './skpk_saved_files'):
     '''
     Load saved compartment instance(s) from an existing folder path or library
     '''
@@ -79,7 +77,6 @@ def load_cmt(*filenames, folder_path = './skpk_saved'):
             list_of_cmts.append(cmt_object)
 
     os.chdir(os.path.dirname(os.getcwd())) # Return console to parent directory
-
     if len(list_of_cmts) == 0:
         raise Exception('No compartments loaded. Please check argument input')
     if len(list_of_cmts) == 1:
@@ -88,7 +85,8 @@ def load_cmt(*filenames, folder_path = './skpk_saved'):
         return list_of_cmts # Returns list of compartment instances
 
 
-def load_all_cmt(folder_path = './skpk_saved'):
+
+def load_all_cmt(folder_path = './skpk_saved_files'):
     '''
     Load all saved compartment instances (pickle files) in specified folder path
     '''
