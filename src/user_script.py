@@ -17,31 +17,35 @@ skpk.main.test_print(2,3)
 #    Generating Compartment (CMT) Instances
 # ===========================================
 
-C1 = skpk.Cmt('A', 22)
+C1 = skpk.Cmt('A1', 1)
+C1.get_attr()
 
 C2 = skpk.Cmt('First-Pass', 10)
+C2.get_attr()
 
 C3 = skpk.Cmt('Free Plasma Drug')
+C3.get_attr()
 
-C4 = skpk.Cmt('Protein Bound Plasma',2)
+C4 = skpk.Cmt('Protein Bound Plasma', 20)
+C4.get_attr()
 
-
-C2.set_attr(cmt_id = 5, Vd = 112)
+C2.set_attr(new_cmt_name = 'First-Pass Metabolism')
 C2.get_attr()
 
 C2.cmt_name
 C2.Vd
-C1.set_attr(1,'NewCmt')
+
+C1.set_attr(new_cmt_name = 'Absorption')
+C1.get_attr()
+
 C3.cmt_attr
 
 C2.get_attr()
-C4.set_attr(cmt_id)
 
 
 
 skpk.Cmt.list_cmt_ids
 skpk.Cmt.list_cmt_names
-skpk.Cmt.show_all()
 
 # ===========================
 #     Saving compartments 

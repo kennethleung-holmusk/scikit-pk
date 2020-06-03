@@ -1,40 +1,38 @@
-# Docstring template
-"""
-numpydoc
-
-Parameters
-----------
-first : array_like
-    the 1st param name `first`
-second : {'value', 'other'}, optional
-    the 3rd param, by default 'value'
-
-Returns
--------
-string
-    a value in a string
-
-Raises
-------
-KeyError
-    when a key error
-OtherError
-    when an other error
-"""
-
 # =========================
 #     Compartment Class
 # =========================
 
 class Cmt:
-    '''
-    Compartment class
-    '''
+    """Short summary.
+
+    Attributes
+    ----------
+    id_counter : type
+        Description of attribute `id_counter`.
+    list_cmt_ids : type
+        Description of attribute `list_cmt_ids`.
+    list_cmt_names : type
+        Description of attribute `list_cmt_names`.
+
+    """
     id_counter = 1 # Assigning incremental ID to compartment instances
     list_cmt_ids = []
     list_cmt_names = []
 
     def __check_cmt_id_exist(self, cmt_id):
+        """Short summary.
+
+        Parameters
+        ----------
+        cmt_id : type
+            Description of parameter `cmt_id`.
+
+        Returns
+        -------
+        type
+            Description of returned object.
+
+        """
         if cmt_id in self.list_cmt_ids:
             raise Exception(f'Compartment ID {cmt_id} already exists')
 
@@ -49,6 +47,19 @@ class Cmt:
             pass
 
     def __check_cmt_Vd_dtype(self, Vd):
+        """Short summary.
+
+        Parameters
+        ----------
+        Vd : type
+            Description of parameter `Vd`.
+
+        Returns
+        -------
+        type
+            Description of returned object.
+
+        """
         if isinstance(Vd, (int, float, type(None))) == False:
             raise ValueError('Vd must be an integer or float')
         else:
@@ -62,9 +73,21 @@ class Cmt:
 
 
     def __init__(self, cmt_name, Vd = 0):
-        '''
-        docstring
-        '''
+        """Short summary.
+
+        Parameters
+        ----------
+        cmt_name : type
+            Description of parameter `cmt_name`.
+        Vd : type
+            Description of parameter `Vd`.
+
+        Returns
+        -------
+        type
+            Description of returned object.
+
+        """
         self.__check_cmt_name_dtype(cmt_name)
         self.__check_cmt_Vd_dtype(Vd)
         self.__check_cmt_name_exist(cmt_name)
@@ -82,30 +105,49 @@ class Cmt:
 
 
 
-    def set_attr(self, cmt_id = None, cmt_name = None, Vd = None):
-        '''
-        Modify the attributes of an existing compartment instance
-        '''
+    def set_attr(self, new_cmt_id = None, new_cmt_name = None, new_Vd = None):
+        """Modify attributes of an existing compartment instance
 
-        if cmt_id is None:
+        Parameters
+        ----------
+        cmt_id : type
+            Description of parameter `cmt_id`.
+        cmt_name : type
+            Description of parameter `cmt_name`.
+        Vd : type
+            Description of parameter `Vd`.
+
+        Returns
+        -------
+        type
+            Description of returned object.
+
+        """
+        if new_cmt_id is None:
             self.cmt_id = self.cmt_id # If no new ID input, then keep existing ID
         else:
-                self.__check_cmt_id_dtype(cmt_id)
-                self.__check_cmt_id_exist(cmt_id)
-                self.cmt_id = cmt_id # Assign new ID
+            self.__check_cmt_id_dtype(new_cmt_id)
+            self.__check_cmt_id_exist(new_cmt_id)
+            for i, id in enumerate(self.list_cmt_ids): # Update list of cmt ID
+                if id == self.cmt_id:
+                    self.list_cmt_ids[i] = new_cmt_id # Replace list value with new ID
+            self.cmt_id = new_cmt_id # Assign new ID
 
-        if cmt_name is None:
+        if new_cmt_name is None:
             self.cmt_name = self.cmt_name # If no new name input, then keep existing name
         else:
-            self.__check_cmt_name_dtype(cmt_name)
-            self.__check_cmt_name_exist(cmt_name)
-            self.cmt_name = cmt_name # Assign new name
+            self.__check_cmt_name_dtype(new_cmt_name)
+            self.__check_cmt_name_exist(new_cmt_name)
+            for i, name in enumerate(self.list_cmt_names): # Update list of cmt names
+                if name == self.cmt_name:
+                    self.list_cmt_names[i] = new_cmt_name # Replace list value with new name
+            self.cmt_name = new_cmt_name # Assign new name
 
-        if Vd is None:
+        if new_Vd is None:
             self.Vd = self.Vd  # If no new Vd input, then keep existing Vd value
         else:
-            self.__check_cmt_Vd_dtype(Vd)
-            self.Vd = Vd # Assign new Vd
+            self.__check_cmt_Vd_dtype(new_Vd)
+            self.Vd = new_Vd # Assign new Vd
 
         self.cmt_attr = (self.cmt_id, self.cmt_name, self.Vd) # Update attributes tuple
 
