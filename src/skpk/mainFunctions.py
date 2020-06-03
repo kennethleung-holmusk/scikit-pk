@@ -12,7 +12,7 @@ def test_print(x,y):
 #  Compartment Functions
 # ========================
 
-def save_cmt(*args, folder_path = './skpk_saved_files'):
+def save_cmt(*args, folder_path = './skpk_saved_cmts'):
     '''
     Saves the compartment instances as pickle files inside folder
     '''
@@ -42,7 +42,7 @@ def __check_path_exist(folder_path):
 
 
 
-def list_cmt(folder_path = './skpk_saved_files'):
+def list_cmt(folder_path = './skpk_saved_cmts'):
     '''
     Lists the saved compartmente instances (pickle files) inside the specified folder path
     '''
@@ -58,7 +58,7 @@ def list_cmt(folder_path = './skpk_saved_files'):
 
 
 
-def load_cmt(*filenames, folder_path = './skpk_saved_files'):
+def load_cmt(*filenames, folder_path = './skpk_saved_cmts'):
     '''
     Load saved compartment instance(s) from an existing folder path or library
     '''
@@ -86,7 +86,7 @@ def load_cmt(*filenames, folder_path = './skpk_saved_files'):
 
 
 
-def load_all_cmt(folder_path = './skpk_saved_files'):
+def load_all_cmt(folder_path = './skpk_saved_cmts'):
     '''
     Load all saved compartment instances (pickle files) in specified folder path
     '''

@@ -4,11 +4,11 @@
 
 # Import necessary libraries
 import os
-os.chdir(r'/home/klty0988/Desktop/scikit-pk/src')
+#os.chdir(r'/home/klty0988/Desktop/scikit-pk/src')
+os.chdir(r'C:\Users\klty0\Desktop\scikit-pk\src')
 
 # Main script for testing classes and functions
 import skpk
-
 
 # Testing functions from mainFunctions.py
 skpk.main.test_print(2,3)
@@ -41,7 +41,6 @@ C1.get_attr()
 C3.cmt_attr
 
 C2.get_attr()
-
 
 
 skpk.Cmt.list_cmt_ids
