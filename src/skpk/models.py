@@ -1,37 +1,28 @@
-# Docstring template
-"""
-numpydoc
-
-Parameters
-----------
-first : array_like
-    the 1st param name `first`
-second : {'value', 'other'}, optional
-    the 3rd param, by default 'value'
-
-Returns
--------
-string
-    a value in a string
-
-Raises
-------
-KeyError
-    when a key error
-OtherError
-    when an other error
-"""
-
 # =========================
 #        Model Class
 # =========================
 
 class Model:
-    # Constructor
+    '''
+    Model class (docstring)
+    '''
+    list_model_names = []
+
+    def __check_model_name_exist(self, modelname):
+        if modelname in list_model_names:
+            raise Exception(f'Model name {modelname} already exists')
+        else:
+            pass
+
+
     def __init__(self, modelname):
         self.link_list = []
         self.cmt_list = []
+
+        self.__check_model_name_exist(modelname)
         self.modelname = modelname
+        list_model_names.append(self.modelname)
+
         print(f'''
         The model named {modelname} has been generated'
         Start by adding compartment link(s) with the add_link method
