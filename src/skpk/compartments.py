@@ -22,14 +22,13 @@ class Cmt:
         -------
         type
             Description of returned object.
-
         """
         if cmt_id in self.list_cmt_ids:
             raise Exception(f'Compartment ID {cmt_id} already exists')
 
     def __check_cmt_name_exist(self, cmt_name):
         if cmt_name in self.list_cmt_names:
-            raise Exception(f'Compartment name {cmt_name} already exists')
+            raise Exception(f'Compartment name {cmt_name} already exists. Change name....not existing')
 
     def __check_cmt_name_dtype(self, cmt_name):
         if isinstance(cmt_name, (str, type(None))) == False:
