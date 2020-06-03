@@ -3,18 +3,9 @@
 # =========================
 
 class Cmt:
-    """Short summary.
-
-    Attributes
-    ----------
-    id_counter : type
-        Description of attribute `id_counter`.
-    list_cmt_ids : type
-        Description of attribute `list_cmt_ids`.
-    list_cmt_names : type
-        Description of attribute `list_cmt_names`.
-
-    """
+    '''
+    Compartment class
+    '''
     id_counter = 1 # Assigning incremental ID to compartment instances
     list_cmt_ids = []
     list_cmt_names = []
