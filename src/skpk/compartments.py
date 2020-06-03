@@ -6,7 +6,6 @@ class Cmt:
     '''
     Compartment class
     '''
-    id_counter = 1 # Assigning incremental ID to compartment instances
     list_cmt_ids = []
     list_cmt_names = []
 
@@ -22,14 +21,17 @@ class Cmt:
         -------
         type
             Description of returned object.
-
         """
         if cmt_id in self.list_cmt_ids:
-            raise Exception(f'Compartment ID {cmt_id} already exists')
+            raise Exception(f"""Compartment ID {cmt_id} already exists.
+            List of existing compartment IDs:
+            {self.list_cmt_ids}""")
 
     def __check_cmt_name_exist(self, cmt_name):
         if cmt_name in self.list_cmt_names:
-            raise Exception(f'Compartment name {cmt_name} already exists')
+            raise Exception(f"""Compartment name {cmt_name} already exists.
+            List of existing compartment names:
+            {self.list_cmt_names}""")
 
     def __check_cmt_name_dtype(self, cmt_name):
         if isinstance(cmt_name, (str, type(None))) == False:
@@ -63,7 +65,7 @@ class Cmt:
             pass
 
 
-    def __init__(self, cmt_name, Vd = 0):
+    def __init__(self, cmt_id, cmt_name, Vd = 0):
         """Short summary.
 
         Parameters
@@ -79,21 +81,20 @@ class Cmt:
             Description of returned object.
 
         """
+        self.__check_cmt_id_dtype(cmt_id)
         self.__check_cmt_name_dtype(cmt_name)
         self.__check_cmt_Vd_dtype(Vd)
+        self.__check_cmt_id_exist(cmt_id)
         self.__check_cmt_name_exist(cmt_name)
-
+        self.cmt_id = cmt_id
         self.cmt_name = cmt_name
         self.Vd = Vd
-        self.cmt_id = Cmt.id_counter
 
         self.list_cmt_ids.append(self.cmt_id) # Collate compartment IDs in list
         self.list_cmt_names.append(self.cmt_name) # Collate compartment names in list
 
-        Cmt.id_counter += 1
-        self.cmt_attr = (self.cmt_id, self.cmt_name, self.Vd)
-        print(f'Compartment {cmt_name} has been generated')
-
+        self.cmt_attr = (self.cmt_id, self.cmt_name, self.Vd) # Tuple of attributes
+        print(f'Compartment {cmt_name} successfully generated')
 
 
     def set_attr(self, new_cmt_id = None, new_cmt_name = None, new_Vd = None):

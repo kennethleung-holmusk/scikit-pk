@@ -6,11 +6,14 @@ class Model:
     '''
     Model class (docstring)
     '''
+
     list_model_names = []
 
     def __check_model_name_exist(self, modelname):
-        if modelname in list_model_names:
-            raise Exception(f'Model name {modelname} already exists')
+        if modelname in self.list_model_names:
+            raise Exception(f"""Model name {modelname} already exists
+            List of existing model names:
+            {self.list_model_names}""")
         else:
             pass
 
@@ -21,12 +24,15 @@ class Model:
 
         self.__check_model_name_exist(modelname)
         self.modelname = modelname
-        list_model_names.append(self.modelname)
+        self.list_model_names.append(self.modelname)
 
-        print(f'''
-        The model named {modelname} has been generated'
+        print(f""" Model named {modelname} successfully generated'
         Start by adding compartment link(s) with the add_link method
-        ''')
+        """)
+
+    def __check_cmt_class(self, arg1, arg2):
+        if (isinstance(arg1, Cmt) and isinstance(arg2,Cmt)):
+            print("obj is my object")
 
 
     def __check_link_criteria(self, list_of_link_tuples):
