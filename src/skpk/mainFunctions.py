@@ -103,7 +103,11 @@ def load_all_cmt(folder_path = './skpk_saved'):
             list_of_cmts.append(cmt_object)
 
     os.chdir(os.path.dirname(os.getcwd())) # Return console to parent directory
-    return list_of_cmts
+
+    if len(list_of_cmts) == 0:
+        print('No pickle files found in folder')
+    else:
+        return list_of_cmts
 
 
 # ========================
