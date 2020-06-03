@@ -78,6 +78,8 @@ skpk.Model.__check_cmt_class(C1, C2)
 
 A = skpk.Model('Model1')
 
+A.__check_cmt_class(C1,C2)
+
 A.add_link([(3,4,5), (1,2,3)])
 
 A.add_link([(4,)])
