@@ -59,7 +59,7 @@ def load_cmt(*filenames, folder_path = './skpk_saved_cmts'):
     Load saved compartment instance(s) from an existing folder path or library
     '''
     __check_path_exist(folder_path) # Check if folder path exists
-    list_of_cmts = [] # Create empty list to store cmt objects
+    list_cmts = [] # Create empty list to store cmt objects
 
     for filename in filenames:
         pickle_filename = filename + '.pkl' # Convert to pickle file string
@@ -72,15 +72,15 @@ def load_cmt(*filenames, folder_path = './skpk_saved_cmts'):
         else:
             cmt_object = pickle.load(open(pickle_filename, "rb", -1)) # Load pickle
             print(f'Compartment {pickle_filename} loaded')
-            list_of_cmts.append(cmt_object)
+            _cmts.append(cmt_object)
 
     os.chdir(os.path.dirname(os.getcwd())) # Return console to parent directory
-    if len(list_of_cmts) == 0:
+    if len(list_cmts) == 0:
         raise Exception('No compartments loaded. Please check argument input')
-    if len(list_of_cmts) == 1:
-        return list_of_cmts[0] # Directly unpack single-element list into a variable
+    if len(list_cmts) == 1:
+        return list_cmts[0] # Directly unpack single-element list into a variable
     else:
-        return list_of_cmts # Returns list of compartment instances
+        return list_cmts # Returns list of compartment instances
 
 
 
@@ -89,19 +89,19 @@ def load_all_cmt(folder_path = './skpk_saved_cmts'):
     Load all saved compartment instances (pickle files) in specified folder path
     '''
     __check_path_exist(folder_path) # Check if folder path exists
-    list_of_cmts = [] # Create empty list to store cmt objects
+    list_cmts = [] # Create empty list to store cmt objects
 
     for file in os.listdir('.'):
         if file.endswith('.pkl'):
             print(f'Loaded compartment {file}')
             cmt_object = pickle.load(open(file, "rb", -1))
-            list_of_cmts.append(cmt_object)
+            list_cmts.append(cmt_object)
 
     os.chdir(os.path.dirname(os.getcwd())) # Return console to parent directory
-    if len(list_of_cmts) == 0:
+    if len(list_cmts) == 0:
         print('No pickle files found in folder')
     else:
-        return list_of_cmts
+        return list_cmts
 
 
 # ========================

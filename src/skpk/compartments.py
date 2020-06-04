@@ -39,22 +39,11 @@ class Cmt:
         else:
             pass
 
-    def __check_cmt_Vd_dtype(self, Vd):
+    def __check_cmt_vol_dtype(self, cmt_vol):
         """Short summary.
-
-        Parameters
-        ----------
-        Vd : type
-            Description of parameter `Vd`.
-
-        Returns
-        -------
-        type
-            Description of returned object.
-
         """
-        if isinstance(Vd, (int, float, type(None))) == False:
-            raise ValueError('Vd must be an integer or float')
+        if isinstance(cmt_vol, (int, float, type(None))) == False:
+            raise ValueError('Compartment volume must be an integer or float')
         else:
             pass
 
@@ -65,51 +54,31 @@ class Cmt:
             pass
 
 
-    def __init__(self, cmt_id, cmt_name, Vd = 0):
+    def __init__(self, cmt_id, cmt_name, cmt_vol = 0):
         """Short summary.
 
-        Parameters
-        ----------
-        cmt_name : type
-            Description of parameter `cmt_name`.
-        Vd : type
-            Description of parameter `Vd`.
 
-        Returns
-        -------
-        type
-            Description of returned object.
 
         """
         self.__check_cmt_id_dtype(cmt_id)
         self.__check_cmt_name_dtype(cmt_name)
-        self.__check_cmt_Vd_dtype(Vd)
+        self.__check_cmt_vol_dtype(cmt_vol)
         self.__check_cmt_id_exist(cmt_id)
         self.__check_cmt_name_exist(cmt_name)
         self.cmt_id = cmt_id
         self.cmt_name = cmt_name
-        self.Vd = Vd
+        self.cmt_vol = cmt_vol
 
         self.list_cmt_ids.append(self.cmt_id) # Collate compartment IDs in list
         self.list_cmt_names.append(self.cmt_name) # Collate compartment names in list
 
-        self.cmt_attr = (self.cmt_id, self.cmt_name, self.Vd) # Tuple of attributes
+        self.cmt_attr = (self.cmt_id, self.cmt_name, self.cmt_vol) # Tuple of attributes
         print(f'Compartment {cmt_name} successfully generated')
 
 
-    def set_attr(self, new_cmt_id = None, new_cmt_name = None, new_Vd = None):
+    def set_attr(self, new_cmt_id = None, new_cmt_name = None, new_cmt_vol = None):
         """Modify attributes of an existing compartment instance
 
-        Parameters
-        ----------
-        cmt_id : type
-            Description of parameter `cmt_id`.
-        cmt_name : type
-            Description of parameter `cmt_name`.
-        Vd : type
-            Description of parameter `Vd`.
-
-        Returns
         -------
         type
             Description of returned object.
@@ -135,13 +104,13 @@ class Cmt:
                     self.list_cmt_names[i] = new_cmt_name # Replace list value with new name
             self.cmt_name = new_cmt_name # Assign new name
 
-        if new_Vd is None:
-            self.Vd = self.Vd  # If no new Vd input, then keep existing Vd value
+        if new_cmt_vol is None:
+            self.cmt_vol = self.cmt_vol  # If no new cmt_vol, then keep current value
         else:
-            self.__check_cmt_Vd_dtype(new_Vd)
-            self.Vd = new_Vd # Assign new Vd
+            self.__check_cmt_vol_dtype(new_cmt_vol)
+            self.cmt_vol = new_cmt_vol # Assign new compartment volume
 
-        self.cmt_attr = (self.cmt_id, self.cmt_name, self.Vd) # Update attributes tuple
+        self.cmt_attr = (self.cmt_id, self.cmt_name, self.cmt_vol) # Update attributes tuple
 
 
     def get_attr(self):
@@ -150,4 +119,4 @@ class Cmt:
         '''
         print(f"Compartment ID: {self.cmt_id}")
         print(f"Compartment Name: {self.cmt_name}")
-        print(f"Volume of Distribution (Vd): {self.Vd} L")
+        print(f"Compartment Volume: {self.cmt_vol} L")

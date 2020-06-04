@@ -70,30 +70,13 @@ saved_cmts = skpk.main.load_all_cmt()
 
 # Testing Zone
 
-del A
-
-test_tuple = (1,2,3,4)
-
-(isinstance(test_tuple[0], int) and isinstance(test_tuple[1], int))
-
-test_existing_links = [(1,2,3), (4,5,6), (7,8,9)]
-
-test_new_tuples = [(1,2,3),(11,12,13), (14,15,16)]
-
-
-test_exist_links = [(item[0], item[1]) for item in test_existing_links]
-
-
-for tuple in test_new_tuples:
-    if (tuple[0], tuple[1]) in test_exist_links:
-        print('Have already')
 
 
 # ===================================
 #         Testing Model Class
 # ===================================
 
-A = skpk.Model('Model_Test_1')
+A = skpk.Model('Model_Test')
 
 A.get_links()
 
@@ -105,37 +88,28 @@ A.add_cmt(C4, C5)  # Error if not in list
 
 test_list_tuples = [(C1,C2,1), (C2,C1,2)]
 
-# Need to add extra criterion to check that CMT already exists, before adding link
 A.add_link((C2, C1, 25))
+A.add_link((C3, C1, 50))
 A.add_link([(C1,C2,10), (C3,C4,50)])
+A.add_link([(4,)])
 
+
+# Testing cmt not added to model
+C99 = skpk.Cmt(99, 'Brain ECF', 10)
+
+A.add_link((C99, C1, 10))
+
+A.linked_cmts()
+A.get_links()
+A.get_cmts()
 
 A.list_cmt_links
 
-
-A.add_link([(4,)])
-
-A.add_link([(4,7)])
-
-# A.add_cmt([(3,22)])
-
-A.add_bi_link([(6,4)])
-
-A.cmt_list
-
-A.link_list
-
-A.get_link_params()
-
-A.get_cmt_params()
-
-A.get_cmt_id()
+A.summary()
 
 A.clear_model()
 
-A.add_path([1,2,3,4,5,6], [23,25,44,33,24])
 
-A.get_params()
 
 A.get_cmt_after(4)
 
@@ -150,5 +124,3 @@ A.has_cmt_prior(4)
 A.remove_link([(1,2),(3,4),(4,5)])
 
 A.get_params()
-
-del A
