@@ -1,9 +1,31 @@
 # =========================
 #        Model Class
 # =========================
+
+# Pending to do
+# - Create a new list that contain the 5-element link tuples i.e. (From ID, From Name, To ID, To Name, k)
+# - Save and load models
+# - Solving ODE function
+# - Add CMT ID in table output of .get_links()?
+# - Convert all remaining methods in this Model class
+# - Docstrings (Sphinx or Numpy?)
+# - User defined errors (and review error messages)
+# - Unit testing
+# - Tutorial (HTML instructions guide)
+
 from .compartments import Cmt
 
 class Model:
+    """Short summary.
+
+    :param type modelname: Description of parameter `modelname`.
+    :attr type list_cmt_links: Description of parameter `list_cmt_links`.
+    :attr type list_cmts: Description of parameter `list_cmts`.
+    :attr type __check_model_name_exist: Description of parameter `__check_model_name_exist`.
+    :attr type list_model_names: Description of parameter `list_model_names`.
+    :attr modelname:
+
+    """
     '''
     Model class (docstring)
     '''
@@ -11,6 +33,7 @@ class Model:
 
     def __init__(self, modelname):
         self.list_cmt_links = []
+        self.list_cmt_links_tuples = []
         self.list_cmts = []
         self.__check_model_name_exist(modelname)
         self.modelname = modelname
@@ -27,9 +50,16 @@ class Model:
 
     def __check_cmt_exist(self, object):
         if object in self.list_cmts:
-            raise Exception(f"""Compartment {arg} already exists.
+            raise Exception(f"""Compartment {object.cmt_name} already exists.
             List of existing compartments:
             'Edit Later' """)
+
+
+    def __check_cmt_initiated(self, link_input):
+        if (link_input[0] in self.list_cmts) == False:
+            raise Exception(f'Compartment {link_input[0].cmt_name} does not exist')
+        if (link_input[1] in self.list_cmts) == False:
+            raise Exception(f'Compartment {link_input[1].cmt_name} does not exist')
 
 
     def __check_link_exist(self, link_input):
@@ -59,27 +89,37 @@ class Model:
         else:
             if isinstance(link_input, tuple):
                 self.__check_tuple_criteria(link_input)
+                self.__check_cmt_initiated(link_input)
                 self.__check_link_exist(link_input)
             else:
                 # If input is a list
                 for object in link_input:
                     self.__check_tuple_criteria(object)
+                    self.__check_cmt_initiated(object)
                     self.__check_link_exist(object)
 
 
-    def __append_link_tuple(self, tuple):
+    def __append_link(self, tuple):
         if len(tuple) == 3:
             self.list_cmt_links.append(tuple)
-
-        # If no k rate constant element stated in link tuple, automatically assign k = 0
+        # If no k rate constant stated in link tuple, automatically assign k = 0
         if len(tuple) == 2:
             new_tuple = (tuple[0], tuple[1], 0)
             self.list_cmt_links.append(new_tuple)
 
 
+    def __unpack_link_tuple(self, tuple):
+        '''
+        Append as unpacked 5-element tuple (From ID, From Name, To ID, To Name, k)
+        '''
+        pass
+
+
     def add_cmt(self, cmt_input):
         if isinstance(cmt_input, (Cmt, list)) == False:
-            raise ValueError('Arguments must be of Cmt class or list of Cmt instances')
+            raise ValueError("""
+            Arguments must be of Cmt class or list of Cmt instances
+            """)
         else:
             if isinstance(cmt_input, Cmt):
                 self.__check_cmt_exist(cmt_input)
@@ -97,13 +137,29 @@ class Model:
         If no 3rd element stated, the k constant for the link automatically defaults to a value of 0
         '''
         self.__check_link_criteria(link_input)
-
         if isinstance(link_input, list):
             for tuple in link_input:
-                self.__append_link_tuple(tuple)
-
+                self.__append_link(tuple)
         else:
-            self.__append_link_tuple(link_input)
+            self.__append_link(link_input)
+
+
+    def get_links(self):
+        link_list = self.list_cmt_links.copy()
+        # Display tuples in formatted tabular form:
+        # Ref: https://stackoverflow.com/questions/53504145/creating-a-formatted-table-from-a-list-of-tuples
+        w = {0:0, 3:len(str(' '*7) + "From CMT" + str(' '*7)),
+                    2:len(str(' '*7) + "To CMT" + str(' '*7)),
+                    1:len(str(' '*7) + "k rate constant" + str(' '*7))}
+        for link in link_list:
+            for i,d in enumerate(link):
+                w[i] = max(w[i],len(str(d)))
+        col1, col2, col3 = ["From CMT", "To CMT", "k rate constant"]
+        print(f"{col1:<{w[3]}} | {col2:<{w[2]}} | {col3:<{w[1]}}")
+        print("-" * 70)
+        for link in link_list:
+            from_cmt, to_cmt, k_constant = link[0].cmt_name, link[1].cmt_name, link[2]
+            print(f"{from_cmt:<{w[3]}} | {to_cmt:<{w[2]}} | {k_constant:<{w[1]}}")
 
 
     def clear_model(self):
@@ -113,53 +169,64 @@ class Model:
         print('Cleared all compartments and links')
 
 
-
-    def get_links(self):
-        link_list = self.list_cmt_links.copy()
-        print(link_list)
-
-
-
-    def get_link_params(self):
-        link_list_to_print = self.link_list.copy()
-        # Sort by first element of tuple i.e. from_cmt (in ascending order)
-        sorted_list = sorted(link_list_to_print, key=lambda tup: tup[0])
-        print("From CMT      To CMT    k rate constant")
-        for ele1,ele2,ele3 in sorted_list:
-            print("{:<15}{:<16}{}".format(ele1,ele2,ele3))
-
-
-    def get_cmt_id(self):
+    def linked_cmts(self):
         '''
-        Returns list of existing compartments which are connected to at least 1 other compartment
+        Returns list of cmts which are not yet linked to any other cmt
         '''
-        # Get first and second elements of all link list_cmt_tuples
-        first_elements = [tuple[0] for tuple in self.link_list]
-        second_elements = [tuple[1] for tuple in self.link_list]
-        combined_elements = first_elements + second_elements
-        unique_elements = sorted(list(dict.fromkeys(combined_elements)))
-        print(unique_elements)
+        linked_cmts_0 = [tuple[0] for tuple in self.list_cmt_links]
+        linked_cmts_1 = [tuple[1] for tuple in self.list_cmt_links]
+        linked_cmts = list(set(linked_cmts_0 + linked_cmts_1)) # Remove duplicates
+        print('----- Linked Compartments -----')
+        for cmt in linked_cmts:
+            print(cmt.cmt_id, cmt.cmt_name)
+
+        print('\n----- Unlinked Compartments -----')
+        unlinked_cmts = list(set(self.list_cmts) - set(linked_cmts))
+        for cmt in unlinked_cmts:
+            print(cmt.cmt_id, cmt.cmt_name)
 
 
-    def get_cmt_params(self):
-        cmt_list_to_print = self.cmt_list.copy()
-        # Sort by first element of tuple i.e. from_cmt (in ascending order)
-        sorted_list = sorted(cmt_list_to_print, key=lambda tup: tup[0])
-        print("Compartment ID     Vd")
-        for ele1,ele2 in sorted_list:
-            print("{:<19}{:<11}".format(ele1,ele2))
-
-
-    def get_params(self):
+    def get_cmts(self):
         '''
-        Returns the parameters for compartments and links in tabular form
+        Return attributes of all compartments added to model
         '''
-        print(' ')
-        print('-------- Compartment Parameters --------')
-        self.get_cmt_params()
-        print(' ')
-        print('-------- Link Parameters --------')
-        self.get_link_params()
+        cmt_list = [(cmt.cmt_id, cmt.cmt_name, cmt.cmt_vol) for cmt in self.list_cmts.copy()]
+        # Display tuples in formatted tabular form:
+        # Ref: https://stackoverflow.com/questions/53504145/creating-a-formatted-table-from-a-list-of-tuples
+        w = {0:0, 3:len(str(' '*7) + "CMT ID" + str(' '*7)),
+                    2:len(str(' '*7) + "CMT Name" + str(' '*7)),
+                    1:len(str(' '*7) + "CMT Volume" + str(' '*7))}
+        for cmt in cmt_list:
+            for i,d in enumerate(cmt):
+                w[i] = max(w[i],len(str(d)))
+        col1, col2, col3 = ["CMT ID", "CMT Name", "CMT Volume (L)"]
+        print(f"{col1:<{w[3]}} | {col2:<{w[2]}} | {col3:<{w[1]}}")
+        print("-" * 70)
+        for cmt in cmt_list:
+            from_cmt, to_cmt, k_constant = cmt[0], cmt[1], cmt[2]
+            print(f"{from_cmt:<{w[3]}} | {to_cmt:<{w[2]}} | {k_constant:<{w[1]}}")
+
+
+    def summary(self):
+        '''
+        Returns the attributes for compartments and links of model
+        '''
+        print(f"\nName of Model Instance = {self.modelname}")
+        print(f"Number of Compartments = {len(self.list_cmts)}")
+        print(f"Number of Links = {len(self.list_cmt_links)}")
+        print(f"\n{str('='*23)} Compartment Attributes {str('='*23)}")
+        self.get_cmts()
+        print(f"\n{str('='*26)} Link Attributes {str('='*26)}")
+        self.get_links()
+
+
+
+
+
+
+
+
+
 
 
     def get_cmt_after(self,cmt_id):
