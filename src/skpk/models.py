@@ -3,33 +3,19 @@
 # =========================
 
 # Pending to do
-# - Convert all remaining methods in this Model class
 # - GraphViz
-# - Remove compartment and links
 # - Save and load models
 # - Solving ODE function
-# - Add CMT ID in table output of .get_links()?
 # - Docstrings (Sphinx or Numpy?)
 # - User defined errors (and review error messages)
 # - Unit testing
 # - Tutorial (HTML instructions guide)
 
 from .compartments import Cmt
+import graphviz
 
 class Model:
-    """Short summary.
 
-    :param type modelname: Description of parameter `modelname`.
-    :attr type list_cmt_links: Description of parameter `list_cmt_links`.
-    :attr type list_cmts: Description of parameter `list_cmts`.
-    :attr type __check_model_name_exist: Description of parameter `__check_model_name_exist`.
-    :attr type list_model_names: Description of parameter `list_model_names`.
-    :attr modelname:
-
-    """
-    '''
-    Model class (docstring)
-    '''
     list_model_names = []
 
     def __init__(self, modelname):
@@ -353,3 +339,6 @@ class Model:
                 link_tuple[1].cmt_attr[0] == cmt_id_to):
                 self.list_cmt_links.remove(link_tuple)
         self.__update_cmt_link_tuples()
+
+
+    def diagram(self):

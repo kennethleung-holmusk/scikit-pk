@@ -163,3 +163,37 @@ A.has_cmt_prior(4)
 A.remove_link([(1,2),(3,4),(4,5)])
 
 A.get_params()
+
+
+
+
+# ==============================
+#       Testing GraphViz
+# ==============================
+import pydot
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import os
+os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
+
+G = pydot.Dot(graph_type='digraph')
+node = pydot.Node('test_node', style='filled',fillcolor='green')
+G.add_node(node)
+
+from IPython.display import display, Image
+
+im = Image(G.create_png())
+display(im)
+
+plt.imshow()
+
+
+
+
+
+
+
+
+
+
+

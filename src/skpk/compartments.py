@@ -68,7 +68,7 @@ class Cmt:
         print(f'{cmt_name} compartment successfully generated')
 
 
-    def set_attr(self, new_cmt_id = None, new_cmt_name = None, new_cmt_vol = None):
+    def set_attr(self, new_cmt_id = None, new_cmt_name=None, new_cmt_vol=None):
         """Modify attributes of an existing compartment instance
 
         -------
