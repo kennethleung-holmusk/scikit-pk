@@ -115,3 +115,8 @@ def save_model():
 
 def load_model():
     pass
+
+
+
+def solve_ode():
+    pass
