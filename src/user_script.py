@@ -8,12 +8,11 @@ import os
 #os.chdir(r'C:\Users\klty0\Desktop\scikit-pk\src')
 os.chdir(r'C:\Users\Kenneth Leung\Desktop\scikit-pk\src')
 
-# Main script for testing classes and functions
-import skpk
+# ===========================================
+#              Demonstration
+# ===========================================
 
-# ===========================================
-#    Generating Compartment (CMT) Instances
-# ===========================================
+import skpk
 
 C1 = skpk.Cmt(1, 'A1', 1)
 C2 = skpk.Cmt(2, 'First-Pass', 10)
@@ -22,10 +21,64 @@ C4 = skpk.Cmt(4, 'Protein Bound Plasma', 20)
 C5 = skpk.Cmt(5, 'Peripheral Tissues', 15)
 
 C1.get_attr()
+C1.set_attr(new_cmt_name = 'Absorption')
+C1.get_attr()
+
+C1.list_cmt_names
+C1.list_cmt_ids
+
 C2.get_attr()
-C3.get_attr()
-C4.get_attr()
-C5.get_attr()
+C2.set_attr(new_cmt_vol = 15)
+C2.get_attr()
+
+skpk.main.save_cmt(C1, C2, C3, C4, C5)
+skpk.main.list_cmt(folder_path = './skpk_saved_cmts')
+
+D1 = skpk.main.load_cmt('First-Pass')
+D1.get_attr()
+
+
+A = skpk.Model('Model_Test')
+
+A.add_cmt(C1)
+A.add_cmt([C2,C3,C4,C5])
+
+A.add_link((C2, C1, 25))
+A.add_link((C3, C1, 50))
+A.add_link([(C4, C3, 1520), (C3, C5 ,550)])
+A.add_link((C2, C5, 123))
+
+A.get_all_cmts()
+A.get_all_links()
+A.linked_cmts()
+
+A.summary()
+
+A.get_all_cmts()
+A.set_cmt_attr(1, 'Absorption')
+A.set_cmt_attr(1, cmt_vol = 123)
+A.set_cmt_attr(2, 'First-Pass Metab', 150)
+A.get_all_cmts()
+
+A.list_cmt_link_tuples
+
+A.list_cmt_links
+
+A.clear_model()
+
+A.set_link_attr(3,1,9000)
+
+
+A.remove_link(2,1)
+A.get_all_links()
+
+A.remove_cmt(3)
+A.get_all_cmts()
+
+
+# ===========================================
+#    Generating Compartment (CMT) Instances
+# ===========================================
 
 C2.set_attr(new_cmt_name = 'First-Pass Metabolism')
 C2.get_attr()
@@ -49,7 +102,7 @@ skpk.Cmt.list_cmt_names
 #     Saving compartments 
 # ===========================
 
-skpk.main.save_cmt(C1, C2, C3, C4)
+skpk.main.save_cmt(C1, C2, C3, C4, C5)
 
 skpk.main.list_cmt(folder_path = './skpk_saved_cmts')
 
@@ -76,39 +129,25 @@ saved_cmts = skpk.main.load_all_cmt()
 #         Testing Model Class
 # ===================================
 
-A = skpk.Model('Model_Test')
-
-A.get_links()
-
-saved_cmts = skpk.main.load_all_cmt()
-
-A.add_cmt(C1)  # Single item
-A.add_cmt([C2,C3])   # If multiple instances, put into list
-A.add_cmt(C4, C5)  # Error if not in list
-
-test_list_tuples = [(C1,C2,1), (C2,C1,2)]
-
-A.add_link((C2, C1, 25))
-A.add_link((C3, C1, 50))
-A.add_link([(C1,C2,10), (C3,C4,50)])
-A.add_link([(4,)])
-
 
 # Testing cmt not added to model
 C99 = skpk.Cmt(99, 'Brain ECF', 10)
+
+A.add_cmt(C99)
 
 A.add_link((C99, C1, 10))
 
 A.linked_cmts()
 A.get_links()
-A.get_cmts()
+
+
 
 A.list_cmt_links
 
-A.summary()
+A.list_cmt_links_tuples
 
-A.clear_model()
 
+A.get_all_cmts()
 
 
 A.get_cmt_after(4)
