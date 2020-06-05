@@ -8,8 +8,56 @@ import os
 #os.chdir(r'C:\Users\klty0\Desktop\scikit-pk\src')
 os.chdir(r'C:\Users\Kenneth Leung\Desktop\scikit-pk\src')
 
-# Main script for testing classes and functions
+# ===========================================
+#              Demonstration
+# ===========================================
+
 import skpk
+
+C1 = skpk.Cmt(1, 'A1', 1)
+C2 = skpk.Cmt(2, 'First-Pass', 10)
+C3 = skpk.Cmt(3, 'Free Plasma Drug')
+C4 = skpk.Cmt(4, 'Protein Bound Plasma', 20)
+C5 = skpk.Cmt(5, 'Peripheral Tissues', 15)
+
+C1.get_attr()
+C1.set_attr(new_cmt_name = 'Absorption')
+C1.get_attr()
+
+C2.get_attr()
+C2.set_attr(new_cmt_vol = 15)
+C2.get_attr()
+
+skpk.main.save_cmt(C1, C2, C3, C4, C5)
+skpk.main.list_cmt(folder_path = './skpk_saved_cmts')
+
+D1 = skpk.main.load_cmt('First-Pass')
+D1.get_attr()
+
+
+A = skpk.Model('Model_Test')
+
+A.add_cmt(C1) 
+A.add_cmt([C2,C3,C4, C5])
+
+A.add_link((C2, C1, 25))
+A.add_link((C3, C1, 50))
+A.add_link([(C1,C2,10), (C3,C4,50)])
+
+A.get_links()
+A.linked_cmts()
+
+A.summary()
+A.clear_model()
+
+
+
+
+
+
+
+
+
 
 # ===========================================
 #    Generating Compartment (CMT) Instances
@@ -49,7 +97,7 @@ skpk.Cmt.list_cmt_names
 #     Saving compartments 
 # ===========================
 
-skpk.main.save_cmt(C1, C2, C3, C4)
+skpk.main.save_cmt(C1, C2, C3, C4, C5)
 
 skpk.main.list_cmt(folder_path = './skpk_saved_cmts')
 
@@ -84,7 +132,7 @@ saved_cmts = skpk.main.load_all_cmt()
 
 A.add_cmt(C1)  # Single item
 A.add_cmt([C2,C3])   # If multiple instances, put into list
-A.add_cmt(C4, C5)  # Error if not in list
+A.add_cmt(C4, C5)  # Error if input arg is not in list
 
 test_list_tuples = [(C1,C2,1), (C2,C1,2)]
 
@@ -104,6 +152,8 @@ A.get_links()
 A.get_cmts()
 
 A.list_cmt_links
+
+A.list_cmt_links_tuples
 
 A.summary()
 

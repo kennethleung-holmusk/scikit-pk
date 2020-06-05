@@ -56,23 +56,15 @@ class Cmt:
 
     def __init__(self, cmt_id, cmt_name, cmt_vol = 0):
         """Short summary.
-
-
-
         """
         self.__check_cmt_id_dtype(cmt_id)
         self.__check_cmt_name_dtype(cmt_name)
         self.__check_cmt_vol_dtype(cmt_vol)
         self.__check_cmt_id_exist(cmt_id)
         self.__check_cmt_name_exist(cmt_name)
-        self.cmt_id = cmt_id
-        self.cmt_name = cmt_name
-        self.cmt_vol = cmt_vol
-
-        self.list_cmt_ids.append(self.cmt_id) # Collate compartment IDs in list
-        self.list_cmt_names.append(self.cmt_name) # Collate compartment names in list
-
         self.cmt_attr = (self.cmt_id, self.cmt_name, self.cmt_vol) # Tuple of attributes
+        self.list_cmt_ids.append(self.cmt_attr[0]) # Collate compartment IDs in list
+        self.list_cmt_names.append(self.cmt_attr[1]) # Collate compartment names in list
         print(f'Compartment {cmt_name} successfully generated')
 
 
@@ -84,8 +76,11 @@ class Cmt:
             Description of returned object.
 
         """
+        # CONTINUE HERE> Convert all to tuple attributes. Remove isolated attributes
+        # like cmt_id. Purpose is to allow universal updating (rather than update multiple places)
+
         if new_cmt_id is None:
-            self.cmt_id = self.cmt_id # If no new ID input, then keep existing ID
+            pass # If no new ID input, then keep existing ID
         else:
             self.__check_cmt_id_dtype(new_cmt_id)
             self.__check_cmt_id_exist(new_cmt_id)
@@ -117,6 +112,6 @@ class Cmt:
         '''
         Return attributes of an existing compartment instance
         '''
-        print(f"Compartment ID: {self.cmt_id}")
-        print(f"Compartment Name: {self.cmt_name}")
-        print(f"Compartment Volume: {self.cmt_vol} L")
+        print(f"Compartment ID: {self.cmt_attr[0]}")
+        print(f"Compartment Name: {self.cmt_attr[1]}")
+        print(f"Compartment Volume: {self.cmt_attr[2]} L")
