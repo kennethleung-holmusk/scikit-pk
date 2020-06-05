@@ -3,13 +3,12 @@
 # =========================
 
 # Pending to do
+# - Convert all remaining methods in this Model class
 # - GraphViz
-# - Change cmt attributes inside model
 # - Remove compartment and links
 # - Save and load models
 # - Solving ODE function
 # - Add CMT ID in table output of .get_links()?
-# - Convert all remaining methods in this Model class
 # - Docstrings (Sphinx or Numpy?)
 # - User defined errors (and review error messages)
 # - Unit testing
@@ -35,7 +34,7 @@ class Model:
 
     def __init__(self, modelname):
         self.list_cmt_links = [] # Storing links as original compartment objects
-        self.list_cmt_links_tuples = [] # Storing as unpacked tuples
+        self.list_cmt_link_tuples = [] # Storing as unpacked tuples
         self.list_cmts = [] # Storing compartmant instance objects
         self.__check_model_name_exist(modelname)
         self.modelname = modelname
@@ -74,7 +73,7 @@ class Model:
         existing_links = [(tuple[0], tuple[1]) for tuple in self.list_cmt_links]
         if (link_input[0],link_input[1]) in existing_links:
             raise Exception(f"""Link ({link_input[0].cmt_name}) -> ({link_input[1].cmt_name}) already exists.
-            Use get_link_params to see existing link pairs""")
+            List of existing links: {existing_links}""")
 
 
     def __check_tuple_criteria(self, object):
@@ -110,26 +109,30 @@ class Model:
     def __append_link(self, tuple):
         if len(tuple) == 3:
             self.list_cmt_links.append(tuple)
-            self.__unpack_link_tuple(tuple)
+            self.__update_cmt_link_tuples()
         # If no k rate constant stated in link tuple, automatically assign k = 0
         if len(tuple) == 2:
             new_tuple = (tuple[0], tuple[1], 0)
             self.list_cmt_links.append(new_tuple)
-            self.__unpack_link_tuple(new_tuple)
+            self.__update_cmt_link_tuples()
 
 
-    def __unpack_link_tuple(self, tuple):
+    def __update_cmt_link_tuples(self):
         '''
         Append unpacked 5-element tuple (From ID, From Name, To ID, To Name, k)
         Unpacking from 3-element tuple into 5-element tuple
         5-element link tuple: (From ID, From Name, To ID, To Name, k)
         '''
-        unpacked_tuple = (tuple[0].cmt_id,
-                            tuple[0].cmt_name,
-                            tuple[1].cmt_id,
-                            tuple[1].cmt_name,
-                            tuple[2])
-        self.list_cmt_links_tuples.append(unpacked_tuple)
+        self.list_cmt_link_tuples = [] # Reset list first since there will be changes
+        for link in self.list_cmt_links:
+            unpacked_tuple = (link[0].cmt_attr[0], # First element of Cmt attr is ID
+                            link[0].cmt_attr[1], # Second element of Cmt attr is Name
+                            link[0].cmt_attr[2], # Third element of Cmt attr is Volume
+                            link[1].cmt_attr[0],
+                            link[1].cmt_attr[1],
+                            link[1].cmt_attr[2],
+                            link[2])
+            self.list_cmt_link_tuples.append(unpacked_tuple)
 
 
     def add_cmt(self, cmt_input):
@@ -161,8 +164,8 @@ class Model:
             self.__append_link(link_input)
 
 
-    def get_links(self):
-        link_list = self.list_cmt_links_tuples.copy() # Using the list of unwrapped tuples
+    def get_all_links(self):
+        link_list = self.list_cmt_link_tuples.copy() # Using the list of unwrapped tuples
         # Display tuples in formatted tabular form:
         # Ref: https://stackoverflow.com/questions/53504145/creating-a-formatted-table-from-a-list-of-tuples
         w = {0:0, 3:len(str(' '*5) + "From CMT (ID - Name)" + str(' '*5)),
@@ -173,17 +176,9 @@ class Model:
         print("-" * 75)
         for link in link_list:
             from_cmt = f'{link[0]} - {link[1]}'
-            to_cmt = f'{link[2]} - {link[3]}'
-            k = link[4]
+            to_cmt = f'{link[3]} - {link[4]}'
+            k = link[6]
             print(f"{from_cmt:<{w[3]}}|{to_cmt:<{w[3]}}|{k:<{w[1]}}")
-
-
-    def clear_model(self):
-        self.list_cmts = []
-        self.list_cmt_links = []
-        self.list_model_names = []
-        self.modelname = ''
-        print('Cleared all compartments and links')
 
 
     def __get_linked_cmts_in_model(self, list_cmt_links):
@@ -200,27 +195,24 @@ class Model:
         print('\n--- Linked Compartments ---')
         linked_cmts = self.__get_linked_cmts_in_model(self.list_cmt_links)
         for cmt in linked_cmts:
-            print(f"{cmt.cmt_id} - {cmt.cmt_name}")
+            print(f"{cmt.cmt_attr[0]} - {cmt.cmt_attr[1]}")
 
         print('\n--- Unlinked Compartments ---')
         unlinked_cmts = list(set(self.list_cmts) - set(linked_cmts))
         for cmt in unlinked_cmts:
-            print(f"{cmt.cmt_id} - {cmt.cmt_name}")
+            print(f"{cmt.cmt_attr[0]} - {cmt.cmt_attr[1]}")
 
 
     def get_all_cmts(self):
         '''
         Return attributes of all compartments added to model
         '''
-        cmt_list = [(cmt.cmt_id, cmt.cmt_name, cmt.cmt_vol) for cmt in self.list_cmts.copy()]
+        cmt_list = [(cmt.cmt_attr[0], cmt.cmt_attr[1], cmt.cmt_attr[2]) for cmt in self.list_cmts]
         # Display tuples in formatted tabular form:
         # Ref: https://stackoverflow.com/questions/53504145/creating-a-formatted-table-from-a-list-of-tuples
         w = {0:0, 3:len(str(' '*7) + "CMT ID" + str(' '*7)),
                     2:len(str(' '*7) + "CMT Name" + str(' '*7)),
                     1:len(str(' '*7) + "CMT Volume" + str(' '*7))}
-        for cmt in cmt_list:
-            for i,d in enumerate(cmt):
-                w[i] = max(w[i],len(str(d)))
         col1, col2, col3 = ["CMT ID", "CMT Name", "CMT Volume (L)"]
         print(f"{col1:<{w[3]}} | {col2:<{w[2]}} | {col3:<{w[1]}}")
         print("-" * 70)
@@ -237,37 +229,75 @@ class Model:
         print(f"Number of Compartments = {len(self.list_cmts)}")
         print(f"Number of Links = {len(self.list_cmt_links)}")
         print(f"\n{str('='*23)} Compartment Attributes {str('='*23)}")
-        self.get_cmts()
-        print(f"\n{str('='*26)} Link Attributes {str('='*26)}")
-        self.get_links()
+        self.get_all_cmts()
+        print(f"\n{str('='*29)} Link Attributes {str('='*29)}")
+        self.get_all_links()
 
 
-
-
-
-    def set_cmt_attr(self, cmt_id, new_k):
-        list_existing_cmt_ids = [cmt.cmt_id for cmt in self.list_cmts]
+    def __check_new_attr_input(self, cmt_id, cmt_name, cmt_vol):
+        existing_cmt_ids = [cmt.cmt_attr[0] for cmt in self.list_cmts]
+        existing_cmt_names = [cmt.cmt_attr[1] for cmt in self.list_cmts]
         if isinstance(cmt_id, int) == False:
             raise ValueError('Compartment ID must be an integer')
-        if isinstance(new_k, (int, float)) == False:
-            raise ValueError('k constant value must be an integer or a float')
-        if cmt_id not in list_existing_cmt_ids:
+        if isinstance(cmt_name, str) == False:
+            raise ValueError('Compartment name must be a string')
+        if isinstance(cmt_vol, (int, float)) == False:
+            raise ValueError('Compartment volume must be an integer or a float')
+        if cmt_id not in existing_cmt_ids:
             raise Exception(f"""Compartment ID does not exist.
-            List of existing compartment IDs:{list_existing_cmt_ids}""")
-        for cmt_tuple in self.list_cmts:
-            if cmt_tuple[0].cmt_id == cmt_id:
-                tuple_list_ = list(cmt_tuple) # Convert to list for reassignment
-                tuple_list[2] = new_k
-                cmt_tuple = tuple(tuple_list)
+            List of existing compartment IDs:{existing_cmt_ids}""")
+        if cmt_name in existing_cmt_names:
+            raise Exception(f"""Compartment name already exists. Please choose another name.
+            If you wish to keep the existing name, then leave the cmt_name arg as None
+            List of existing compartment names:{existing_cmt_names}""")
+
+
+    def __update_cmt_attr_in_links(self, cmt, cmt_id, cmt_name, cmt_vol):
+        if isinstance(cmt, Cmt) == True: # Only modify if object is compartment class
+            if cmt.cmt_attr[0] == cmt_id:
+                tuple_as_list = list(cmt.cmt_attr) # Convert to list for reassignment
+                if cmt_name is not None:
+                    tuple_as_list[1] = cmt_name
+                if cmt_vol is not None:
+                    tuple_as_list[2] = cmt_vol
+                new_cmt_tuple = tuple(tuple_as_list) # Revert to tuple form
+                cmt.cmt_attr = new_cmt_tuple
             else:
                 pass
+        else:
+            pass
 
 
-    def set_link_attr(self, cmt_id_1, cmt_id_2):
-        pass
+    def set_cmt_attr(self, cmt_id, cmt_name = None, cmt_vol = None):
+        self.__check_new_attr_input(cmt_id, cmt_name, cmt_vol)
+        for cmt in self.list_cmts:
+            self.__update_cmt_attr_in_links(cmt, cmt_id, cmt_name, cmt_vol)
+
+        # Update the cmt objects within the list_cmt_links
+        for link_tuple in self.list_cmt_links:
+            for cmt in link_tuple:
+                self.__update_cmt_attr_in_links(cmt, cmt_id, cmt_name, cmt_vol)
+                self.__update_cmt_link_tuples()
+
+
+    def set_link_attr(self, cmt_id_1, cmt_id_2, k):
+        existing_links = [(tuple[0],tuple[2]) for tuple in self.list_cmt_links_tuples]
+        if (cmt_id_1, cmt_id_2) not in existing_links:
+            raise Exception(f""" Link does not exist. Use .add_link to add a new link
+            List of existing compartment ID link pairs: {existing_links}""")
+        
 
 
 
+
+
+    def clear_model(self):
+        self.list_cmts = []
+        self.list_cmt_links = []
+        self.list_cmt_link_tuples = []
+        self.list_model_names = []
+        self.modelname = ''
+        print('Cleared all compartments and links')
 
 
     def remove_cmt(self):
@@ -275,17 +305,6 @@ class Model:
 
     def remove_link(self):
         pass
-
-
-
-    def get_cmt_linked(self, cmt_id):
-        if isinstance(cmt_id, int) == False:
-            raise ValueError('Compartment ID needs to be an integer')
-
-        linked_cmts = self.__get_linked_cmts_in_model(self.list_cmt_links)
-        if (cmt_id in linked_cmts) == False:
-            pass
-
 
 
 
@@ -305,7 +324,15 @@ class Model:
 
 
 
-
+    #
+    # def get_cmt_linked(self, cmt_id):
+    #     if isinstance(cmt_id, int) == False:
+    #         raise ValueError('Compartment ID needs to be an integer')
+    #
+    #     linked_cmts = self.__get_linked_cmts_in_model(self.list_cmt_links)
+    #     if (cmt_id in linked_cmts) == False:
+    #         pass
+    #
 
     # def get_cmt_after(self,cmt_id):
     #     '''
@@ -351,14 +378,6 @@ class Model:
     #         return True
     #     else:
     #         return False
-
-
-
-
-
-
-
-
 
 
 
