@@ -68,7 +68,7 @@ class Cmt:
         print(f'{cmt_name} compartment successfully generated')
 
 
-    def set_attr(self, new_cmt_id = None, new_cmt_name = None, new_cmt_vol = None):
+    def set_attr(self, new_cmt_id = None, new_cmt_name=None, new_cmt_vol=None):
         """Modify attributes of an existing compartment instance
 
         -------
@@ -112,8 +112,9 @@ class Cmt:
             pass  # If no new cmt_vol, then keep current value
         else:
             self.__check_cmt_vol_dtype(new_cmt_vol)
-            self.cmt_vol = new_cmt_vol # Assign new compartment volume
-
+            tuple_as_list = list(self.cmt_attr)
+            tuple_as_list[2] = new_cmt_vol
+            self.cmt_attr = tuple(tuple_as_list)
 
 
     def get_attr(self):

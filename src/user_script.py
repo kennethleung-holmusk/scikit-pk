@@ -32,13 +32,14 @@ C2.set_attr(new_cmt_vol = 15)
 C2.get_attr()
 
 skpk.main.save_cmt(C1, C2, C3, C4, C5)
-skpk.main.list_cmt(folder_path = './skpk_saved_cmts')
+skpk.main.list_all(path = './skpk_saved_cmts')
 
 D1 = skpk.main.load_cmt('First-Pass')
 D1.get_attr()
 
-
+# Instantiate a model
 A = skpk.Model('Model_Test')
+B = skpk.Model('Model_Test_2')
 
 A.add_cmt(C1)
 A.add_cmt([C2,C3,C4,C5])
@@ -55,25 +56,24 @@ A.linked_cmts()
 A.summary()
 
 A.get_all_cmts()
-A.set_cmt_attr(1, 'Absorption')
+A.set_cmt_attr(1, 'Absorption Cmt')
 A.set_cmt_attr(1, cmt_vol = 123)
-A.set_cmt_attr(2, 'First-Pass Metab', 150)
+A.set_cmt_attr(2, 'First-Pass Metabolism', 150)
 A.get_all_cmts()
 
-A.list_cmt_link_tuples
-
-A.list_cmt_links
-
-A.clear_model()
 
 A.set_link_attr(3,1,9000)
-
 
 A.remove_link(2,1)
 A.get_all_links()
 
 A.remove_cmt(3)
 A.get_all_cmts()
+A.get_all_links()
+A.list_cmt_links
+
+A.clear_model()
+del A
 
 
 # ===========================================
@@ -102,16 +102,18 @@ skpk.Cmt.list_cmt_names
 #     Saving compartments 
 # ===========================
 
-skpk.main.save_cmt(C1, C2, C3, C4, C5)
+skpk.main.save(A, B)
 
-skpk.main.list_cmt(folder_path = './skpk_saved_cmts')
+skpk.main.save_model(A)
+
+skpk.main.list_all(path = './skpk_saved')
 
 
-# ===========================
-#     Loading compartments 
-# ===========================
+# =====================================
+#     Loading compartments /Models
+# =====================================
 
-D1 = skpk.main.load_cmt('First-Pass')
+D1 = skpk.main.load_cmt('cmt_First-Pass', path = './skpk_saved')
 
 D2 = skpk.main.load_cmt('First-Pass', folder_path = './wrongpath')
 
@@ -119,11 +121,17 @@ E1, E2 = skpk.main.load_cmt('Absorption', 'First-Pass')
 
 D1.get_attr()
 
-saved_cmts = skpk.main.load_all_cmt()
+saved_cmts = skpk.main.load_all_cmts()
+
+saved_models = skpk.main.load_all_models()
+
+new_model = skpk.main.load_model('model_Model_Test')
+
+new_model.get_all_links()
 
 # Testing Zone
 
-
+all_models = skpk.main.load_all_models()
 
 # ===================================
 #         Testing Model Class
@@ -140,7 +148,7 @@ A.add_link((C99, C1, 10))
 A.linked_cmts()
 A.get_links()
 
-
+skpk.main.save_model(A)
 
 A.list_cmt_links
 
@@ -163,3 +171,42 @@ A.has_cmt_prior(4)
 A.remove_link([(1,2),(3,4),(4,5)])
 
 A.get_params()
+
+A.get_matrix()
+
+A.linked_cmts()
+
+A.get_linked_cmts_in_model()
+
+
+# ==============================
+#       Testing GraphViz
+# ==============================
+import pydotplus
+import graphviz
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import os
+
+from IPython.display import display, Image
+
+G = pydot.Dot(graph_type='digraph')
+node = pydot.Node('test_node', style='filled',fillcolor='green')
+G.add_node(node)
+
+
+im = Image(G.create_png())
+display(im)
+
+plt.imshow()
+
+
+
+
+
+
+
+
+
+
+
