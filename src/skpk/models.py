@@ -1,18 +1,20 @@
 # =========================
 #        Model Class
 # =========================
+# Fold all functions: Ctrl + Alt + Shift + [
 
 # Pending to do
 # - GraphViz
-# - Save and load models
 # - Solving ODE function
-# - Docstrings (Sphinx or Numpy?)
+# - Docstrings (Numpy)
 # - User defined errors (and review error messages)
 # - Unit testing
 # - Tutorial (HTML instructions guide)
 
+import numpy as np
 from .compartments import Cmt
 import graphviz
+import pydot
 
 class Model:
 
@@ -179,7 +181,7 @@ class Model:
             print(f"{from_cmt:<{w[3]}}|{to_cmt:<{w[3]}}|{k:<{w[1]}}")
 
 
-    def __get_linked_cmts_in_model(self, list_cmt_links):
+    def __get_linked_cmts_in_model(self):
         linked_cmts_0 = [tuple[0] for tuple in self.list_cmt_links]
         linked_cmts_1 = [tuple[1] for tuple in self.list_cmt_links]
         linked_cmts = list(set(linked_cmts_0 + linked_cmts_1)) # Remove duplicates
@@ -191,7 +193,7 @@ class Model:
         Returns list of cmts which are linked to any other cmt
         '''
         print('\n--- Linked Compartments ---')
-        linked_cmts = self.__get_linked_cmts_in_model(self.list_cmt_links)
+        linked_cmts = self.__get_linked_cmts_in_model()
         for cmt in linked_cmts:
             print(f"{cmt.cmt_attr[0]} - {cmt.cmt_attr[1]}")
 
@@ -286,14 +288,13 @@ class Model:
             raise Exception(f""" Link does not exist. Use .add_link to add a new link
             List of existing compartment ID link pairs: {existing_links}""")
 
-        # Update list_cmt_links
         for index, link_tuple in enumerate(self.list_cmt_links):
             if (link_tuple[0].cmt_attr[0] == cmt_id_from and
                 link_tuple[1].cmt_attr[0] == cmt_id_to):
                     tuple_as_list = list(link_tuple)
                     tuple_as_list[2] = new_k
                     new_link_tuple = tuple(tuple_as_list)
-                    self.list_cmt_links[index] = new_link_tuple
+                    self.list_cmt_links[index] = new_link_tuple # Update list_cmt_links
         #Update list_cmt_link_tuples
         self.__update_cmt_link_tuples()
 
@@ -320,11 +321,20 @@ class Model:
                     self.list_cmts.remove(cmt)
 
             for link_tuple in self.list_cmt_links:
-                if (link_tuple[0].cmt_attr[0] == cmt_id or \
-                    link_tuple[1].cmt_attr[0] == cmt_id):
+                if (link_tuple[0].cmt_attr[0] == cmt_id):
+                    self.list_cmt_links.remove(link_tuple)
+
+            for link_tuple in self.list_cmt_links:
+                if (link_tuple[1].cmt_attr[0] == cmt_id):
                     self.list_cmt_links.remove(link_tuple)
 
         self.__update_cmt_link_tuples()
+
+        #Or conditional did not work, so above repeat code for 2nd Cmt of tuple
+        # for link_tuple in self.list_cmt_links:
+            # if (link_tuple[0].cmt_attr[0] == cmt_id) or \
+            #       (link_tuple[1].cmt_attr[0] == cmt_id):
+            #     self.list_cmt_links.remove(link_tuple)
 
 
     def remove_link(self, cmt_id_from, cmt_id_to):
@@ -341,4 +351,29 @@ class Model:
         self.__update_cmt_link_tuples()
 
 
+    def get_matrix(self):
+        # Convert list of tuples to list of arrays
+        array_list = [list(tuple) for tuple in self.list_cmt_link_tuples]
+
+        # Matrix dimensions = n x n, where n is number of linked compartments
+        matrix_dim = len(self.__get_linked_cmts_in_model())
+
+        # Generate empty matrix (shape n x n)
+        matrix = np.zeros(shape=(matrix_dim, matrix_dim))
+
+        for array in array_list:
+            i = array[0] - 1 # Adding a -1 because we do not have cmt 0 yet
+            j = array[3] - 1
+            matrix[i][j] = array[6]
+
+        print(matrix)
+
+
+
+
+
+
+
     def diagram(self):
+        # GraphViz
+        pass

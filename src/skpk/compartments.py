@@ -112,8 +112,9 @@ class Cmt:
             pass  # If no new cmt_vol, then keep current value
         else:
             self.__check_cmt_vol_dtype(new_cmt_vol)
-            self.cmt_vol = new_cmt_vol # Assign new compartment volume
-
+            tuple_as_list = list(self.cmt_attr)
+            tuple_as_list[2] = new_cmt_vol
+            self.cmt_attr = tuple(tuple_as_list)
 
 
     def get_attr(self):
