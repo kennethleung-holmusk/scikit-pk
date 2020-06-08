@@ -1,8 +1,7 @@
 # =========================
 #        Model Class
 # =========================
-# Fold all functions: Ctrl + Alt + Shift + [
-# Pending to do
+# Pending
 # - GraphViz
 # - Solving ODE function
 # - Docstrings (Numpy)
