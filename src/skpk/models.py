@@ -2,11 +2,11 @@
 #        Model Class
 # =========================
 # Fold all functions: Ctrl + Alt + Shift + [
-
 # Pending to do
 # - GraphViz
 # - Solving ODE function
 # - Docstrings (Numpy)
+# - Create modlib folder to save and store pre-built PK models
 # - User defined errors (and review error messages)
 # - Unit testing
 # - Tutorial (HTML instructions guide)
@@ -361,10 +361,15 @@ class Model:
         # Generate empty matrix (shape n x n)
         matrix = np.zeros(shape=(matrix_dim, matrix_dim))
 
+        # Get smallest compartment ID Value in model
+        min_dim = min(min([array[0] for array in array_list]),
+                        min([array[3] for array in array_list]))
+
         for array in array_list:
-            i = array[0] - 1 # Adding a -1 because we do not have cmt 0 yet
-            j = array[3] - 1
-            matrix[i][j] = array[6]
+            # Subtract min_dim to allow correct (zero-) indexing in matrix
+            row = array[0] - min_dim
+            col = array[3] - min_dim
+            matrix[row][col] = array[6]
 
         print(matrix)
 
