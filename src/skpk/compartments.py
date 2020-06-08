@@ -2,7 +2,7 @@
 #     Compartment Class
 # =========================
 class Cmt:
-    """A class used to represent a compartment in a PK model
+    """A class used to represent a compartment in a pharmacokinetic (PK) model
 
     Attributes
     ----------
@@ -14,6 +14,7 @@ class Cmt:
     """
     list_cmt_ids = [] # List of IDs of all instantiated compartment instances
     list_cmt_names = [] # List of names of all instantiated compartment instances
+
 
     def __check_cmt_id_exist(self, cmt_id):
         """Check whether input cmt_id already exists in list of Cmt IDs.

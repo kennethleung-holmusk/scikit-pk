@@ -1,15 +1,13 @@
 # =========================
 #        Model Class
 # =========================
-# Fold all functions: Ctrl + Alt + Shift + [
-# Pending to do
-# - GraphViz
+# Pending
 # - Solving ODE function
-# - Docstrings (Numpy)
 # - Create modlib folder to save and store pre-built PK models
 # - User defined errors (and review error messages)
 # - Unit testing
 # - Tutorial (HTML instructions guide)
+# - GraphViz (Postpone)
 
 import numpy as np
 from .compartments import Cmt
@@ -17,24 +15,66 @@ import graphviz
 import pydot
 
 class Model:
+    """A class used to represent a pharmacokinetic (PK) model
+
+    Parameters
+    ----------
+    modelname : str
+        Name of Model instance
+
+    Attributes
+    ----------
+    list_cmt_links : list
+        List of tuples of inter-compartmental links (comprising Cmt objects),
+        where tuple is of the format (Cmt_1, Cmt_2, k)
+    list_cmt_link_tuples : list
+        List of tuples of inter-compartmental links comprising unwrapped
+        attributes i.e. (From_Cmt_ID, From_Cmt_Name, From_Cmt_Vol, To_Cmt_ID,
+        To_Cmt_Name, To_Cmt_Vol, k)
+    list_cmts : list
+        List of Cmt instances
+    list_model_names : list
+        List of model names of instantiated Model instances
+
+    """
 
     list_model_names = []
 
     def __init__(self, modelname):
+        """Constructor for the Model class
+
+        Parameters
+        ----------
+        modelname : str
+            Name assigned to the Model instance
+
+        """
         self.list_cmt_links = [] # Storing links as original compartment objects
         self.list_cmt_link_tuples = [] # Storing as unpacked tuples
         self.list_cmts = [] # Storing compartmant instance objects
         self.__check_model_name_exist(modelname)
         self.modelname = modelname
         self.list_model_names.append(self.modelname)
-        print(f" Model named {modelname} successfully generated. Start by adding compartments")
+        print(f" Model named {modelname} successfully generated")
 
 
     def __check_model_name_exist(self, modelname):
+        """Check whether model name already exists.
+
+        Parameters
+        ----------
+        modelname : str
+            Name of Model instance
+
+        Raises
+        -------
+        Exception
+            If modelname is already in the list of model names (list_model_names)
+
+        """
         if modelname in self.list_model_names:
             raise Exception(f"""Model name {modelname} already exists
-            List of existing model names:
-            {self.list_model_names}""")
+            List of existing model names: {self.list_model_names}""")
 
 
     def __check_cmt_exist(self, cmt):
@@ -374,11 +414,6 @@ class Model:
         print(matrix)
 
 
-
-
-
-
-
-    def diagram(self):
-        # GraphViz
-        pass
+    # def diagram(self):
+    #     # GraphViz
+    #     pass
