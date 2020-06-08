@@ -5,8 +5,8 @@
 # Import necessary libraries
 import os
 #os.chdir(r'/home/klty0988/Desktop/scikit-pk/src')
-#os.chdir(r'C:\Users\klty0\Desktop\scikit-pk\src')
-os.chdir(r'C:\Users\Kenneth Leung\Desktop\scikit-pk\src')
+os.chdir(r'C:\Users\klty0\Desktop\scikit-pk\src')
+#os.chdir(r'C:\Users\Kenneth Leung\Desktop\scikit-pk\src')
 
 # ===========================================
 #              Demonstration
