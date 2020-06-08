@@ -31,15 +31,15 @@ C2.get_attr()
 C2.set_attr(new_cmt_vol = 15)
 C2.get_attr()
 
-skpk.main.save_cmt(C1, C2, C3, C4, C5)
-skpk.main.list_all(path = './skpk_saved_cmts')
+skpk.main.save(C1, C2, C3, C4, C5)
+skpk.main.list_all(path = './skpk_saved')
 
-D1 = skpk.main.load_cmt('First-Pass')
+D1 = skpk.main.load_cmt('cmt_Free Plasma Drug')
 D1.get_attr()
+
 
 # Instantiate a model
 A = skpk.Model('Model_Test')
-B = skpk.Model('Model_Test_2')
 
 A.add_cmt(C1)
 A.add_cmt([C2,C3,C4,C5])
@@ -61,7 +61,6 @@ A.set_cmt_attr(1, cmt_vol = 123)
 A.set_cmt_attr(2, 'First-Pass Metabolism', 150)
 A.get_all_cmts()
 
-
 A.set_link_attr(3,1,9000)
 
 A.remove_link(2,1)
@@ -71,6 +70,8 @@ A.remove_cmt(3)
 A.get_all_cmts()
 A.get_all_links()
 A.list_cmt_links
+
+A.get_matrix()
 
 A.clear_model()
 del A
