@@ -52,7 +52,7 @@ class Model:
         self.list_cmt_links = [] # Storing links as original compartment objects
         self.list_cmt_link_tuples = [] # Storing as unpacked tuples
         self.list_cmts = [] # Storing compartmant instance objects
-        self.__check_model_name_exist(modelname)
+        #self.__check_model_name_exist(modelname)
         self.modelname = modelname
         self.list_model_names.append(self.modelname)
         print(f" Model named {modelname} successfully generated")
@@ -89,12 +89,12 @@ class Model:
     def __check_cmt_initiated(self, link_input):
         if (link_input[0] in self.list_cmts) == False:
             raise Exception(f"""
-            Compartment {link_input[0].cmt_id}-{link_input[0].cmt_name} does not exist in model instance.
+            Compartment {link_input[0].cmt_attr[0]}-{link_input[0].cmt_attr[1]} does not exist in model instance.
             Add compartment instance into model with the .add_cmt method
             """)
         if (link_input[1] in self.list_cmts) == False:
             raise Exception(f"""
-            Compartment {link_input[1].cmt_id}-{link_input[1].cmt_name} does not exist in model instance.
+            Compartment {link_input[1].cmt_attr[0]}-{link_input[1].cmt_attr[1]} does not exist in model instance.
             Add compartment instance into model with the .add_cmt method
             """)
 
@@ -407,11 +407,15 @@ class Model:
 
         for array in array_list:
             # Subtract min_dim to allow correct (zero-) indexing in matrix
-            row = array[0] - min_dim
-            col = array[3] - min_dim
-            matrix[row][col] = array[6]
+            from_cmt = array[0] - min_dim
+            to_cmt = array[3] - min_dim
 
-        print(matrix)
+            # Update the 2 elements involved for every link
+            # E.g. for link 0 -> 1 with k = ka, [0,0] = -ka and [1,0] = ka
+            matrix[from_cmt][from_cmt] = matrix[from_cmt][from_cmt] - array[6]
+            matrix[to_cmt][from_cmt] = matrix[to_cmt][from_cmt] + array[6]
+
+        return matrix
 
 
     # def diagram(self):

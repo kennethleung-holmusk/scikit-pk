@@ -139,8 +139,8 @@ class Cmt:
         self.__check_cmt_id_dtype(cmt_id) # Checks data type of cmt_id
         self.__check_cmt_name_dtype(cmt_name) # Checks data type of cmt_name
         self.__check_cmt_vol_dtype(cmt_vol) # Checks data type of cmt_vol
-        self.__check_cmt_id_exist(cmt_id) # Checks that cmt_id already exists
-        self.__check_cmt_name_exist(cmt_name) # Checks that cmt_name already exists
+        #self.__check_cmt_id_exist(cmt_id) # Checks that cmt_id already exists
+        #self.__check_cmt_name_exist(cmt_name) # Checks that cmt_name already exists
         self.cmt_attr = (cmt_id, cmt_name, cmt_vol) # Tuple of attributes
         self.list_cmt_ids.append(self.cmt_attr[0]) # Collate compartment IDs in list
         self.list_cmt_names.append(self.cmt_attr[1]) # Collate compartment names in list
