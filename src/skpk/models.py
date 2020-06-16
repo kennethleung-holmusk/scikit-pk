@@ -195,7 +195,8 @@ class Model:
         and includes the k-constant attribute to the link if specified as the 3rd element in the input tuple.
         If no 3rd element stated, the k constant for the link automatically defaults to a value of 0
         '''
-        self.__check_link_criteria(link_input)
+        self.list_cmt_links = []
+        #self.__check_link_criteria(link_input)
         if isinstance(link_input, list):
             for tuple in link_input:
                 self.__append_link(tuple)
